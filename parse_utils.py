@@ -6,7 +6,7 @@ Please insert a list of your transformations in the following format:
 ...<trans_key ...args>
 Available transormations:
 <TRANS offset>
-<SCALE factor>
+<SCALE Sx Sy>
 <ROT angle Px Py>
 <NTHP n>
 <HE>

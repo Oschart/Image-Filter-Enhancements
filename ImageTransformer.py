@@ -4,7 +4,8 @@ import numpy as np
 class ImageTransformer():
     def __init__(self, tr_list=[]):
         self.tr_list = tr_list
-        self.optimize_matrices()
+        if tr_list:
+            self.optimize_matrices()
 
     def optimize_matrices(self):
         tr_list = self.tr_list
@@ -20,3 +21,14 @@ class ImageTransformer():
         for tr in self.tr_list:
             Y = tr.apply(Y)
         return Y
+    
+    def apply_filter(self, X, F):
+        n, m = X.shape
+        nk, mk = F.shape
+        ny, my = n-nk, m-mk
+        Y = np.zeros(shape=(ny,my))
+        for i in range(ny):
+            for j in range(my):
+                M = X[i:i+nk,j:j+mk]
+                Y[i,j] = max(min((M*F).sum(), 255.0), 0.0) 
+        return Y/np.max(Y)
