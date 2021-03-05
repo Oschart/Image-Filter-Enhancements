@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+
 class ImageTransformer():
     def __init__(self, tr_list=[]):
         self.tr_list = tr_list
@@ -15,23 +16,39 @@ class ImageTransformer():
                 opt_trs.append(tr_list[i])
         self.tr_list = opt_trs
 
-
     def apply_all(self, X):
         Y = np.array(X, copy=True)
         for tr in self.tr_list:
             Y = tr.apply(Y)
         return Y
-    
-    def apply_filter(self, X, F):
-        # This function does 'same' padding
+
+    def apply_filter(self, X, F, clip=True, padding='same'):
+        """[Apply filter F to image X with 'same' padding]
+
+        Args:
+            X ([2d numpy array]): [Normalized gray image]
+            F ([2d numpy array]): [Filter]
+
+        Returns:
+            [2d numpy array]: [Filtered image]
+        """
         n, m = X.shape
         nk, mk = F.shape
-        pad = nk//2
-        Xp = cv2.copyMakeBorder(X, pad, pad, pad, pad, borderType=cv2.BORDER_REFLECT)
+        if padding == 'same':
+            padv, padh = nk//2, mk//2
+            nn, mm = n, m
+        else:
+            padv, padh = 0, 0
+            nn, mm = n-nk+1, m-mk+1
+        Xp = cv2.copyMakeBorder(X, padv, padv, padh,
+                                padh, borderType=cv2.BORDER_REFLECT)
         Y = np.zeros(shape=X.shape)
-        for i in range(n):
-            for j in range(m):
-                M = Xp[i:i+nk,j:j+mk]
-                #Y[i,j] = max(min((M*F).sum(), 255.0), 0.0) 
-                Y[i,j] = max(min((M*F).sum(), 255.0), 0.0) 
-        return Y/np.max(Y)
+        for i in range(nn):
+            for j in range(mm):
+                M = Xp[i:i+nk, j:j+mk]
+                Y[i, j] = (M*F).sum()
+        
+        if clip:
+            Y = Y/np.max(Y)
+            Y = np.clip(Y, 0.0, 1.0)
+        return Y
