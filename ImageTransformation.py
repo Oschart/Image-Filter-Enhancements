@@ -64,18 +64,18 @@ class ImageTransformation:
         return Y
 
     def apply_mat(self, X):
-        n, m = X.shape
-        dest_shape = (int(n*self.Sy), int(m*self.Sx))
-        nn, mm = dest_shape
+        h, w = X.shape
+        dest_shape = (int(h*self.Sy), int(w*self.Sx))
+        nh, nw = dest_shape
         mat_inv = np.linalg.inv(self.mat)
         Y = np.zeros(shape=dest_shape)
-        for i in range(nn):
-            for j in range(mm):
-                x = np.array([i, j, 1])
-                ik, jk, _ = mat_inv@x
-                ik, jk = int(ik), int(jk)
-                if 0 <= ik < n and 0 <= jk < m:
-                    Y[i, j] = X[ik, jk]
+        for iy in range(nh):
+            for ix in range(nw):
+                pt = np.array([ix, iy, 1])
+                vx, vy, _ = mat_inv@pt
+                vx, vy = int(vx), int(vy)
+                if 0 <= vy < h and 0 <= vx < w:
+                    Y[iy, ix] = X[vy, vx]
         return Y
 
     def translation_mat(self, tx, ty):
