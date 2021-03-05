@@ -1,5 +1,5 @@
 import numpy as np
-
+import cv2
 
 class ImageTransformer():
     def __init__(self, tr_list=[]):
@@ -23,12 +23,15 @@ class ImageTransformer():
         return Y
     
     def apply_filter(self, X, F):
+        # This function does 'same' padding
         n, m = X.shape
         nk, mk = F.shape
-        ny, my = n-nk, m-mk
-        Y = np.zeros(shape=(ny,my))
-        for i in range(ny):
-            for j in range(my):
-                M = X[i:i+nk,j:j+mk]
+        pad = nk//2
+        Xp = cv2.copyMakeBorder(X, pad, pad, pad, pad, borderType=cv2.BORDER_REFLECT)
+        Y = np.zeros(shape=X.shape)
+        for i in range(n):
+            for j in range(m):
+                M = Xp[i:i+nk,j:j+mk]
+                #Y[i,j] = max(min((M*F).sum(), 255.0), 0.0) 
                 Y[i,j] = max(min((M*F).sum(), 255.0), 0.0) 
         return Y/np.max(Y)
