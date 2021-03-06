@@ -24,7 +24,7 @@ def parse_trans(trans_str):
     return sep_trans
 
 
-def display_single_filter(img_orig, img_filt, effect_name=None, aspect='equal', grad=None):
+def display_single_filter(img_orig, img_filt, orig_name="Original", effect_name=None, aspect='equal', grad=None):
     if grad is None:
         n = 2
         w = 5
@@ -34,7 +34,7 @@ def display_single_filter(img_orig, img_filt, effect_name=None, aspect='equal', 
     fig, axes = plt.subplots(
         1, n, sharex=True, sharey=True, figsize=(8, w), dpi=100)
     #fig.suptitle(filter_name)
-    axes[0].set_title('Original',
+    axes[0].set_title(orig_name,
                       fontdict=None, loc='center', color="k")
     axes[0].imshow(img_orig, cmap='gray', aspect=aspect)
     axes[0].get_xaxis().set_visible(False)
