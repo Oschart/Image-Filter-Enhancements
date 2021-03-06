@@ -113,7 +113,7 @@ def run():
         imgs_2d.append(img_f)
 
     display_single_filter(
-        imgs_1d[0], imgs_2d[0], orig_name="2D Filter (3x3)", effect_name="1D Separated")
+        imgs_2d[0], imgs_1d[0], orig_name="2D Filter (3x3)", effect_name="1D Separated")
 
     n2d = 4
     display_decomp_res(imgs_1d[:n2d], imgs_2d[:n2d], sizes[:n2d])
