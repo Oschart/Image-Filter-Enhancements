@@ -13,15 +13,23 @@ from ImageTransformer import ImageTransformer
 
 def display_decomp_res(imgs1D, imgs2D, sizes):
     n = len(sizes)
-    fig, axes = plt.subplots(2, n, sharex=True, sharey=True)
+    fig, axes = plt.subplots(
+        n, 2, sharex=True, sharey=True, figsize=(6, 6), dpi=100)
     
+    fig.suptitle("2D Filters vs 1D Decomposition")
+    
+    for ax in axes.flat:
+        ax.set(xticks=[], yticks=[])
+
     ax = axes.ravel()
-    for i in range(n):
-        k = sizes[i]
-        ax[i].set_title(f"{k}x{k} Original")
-        ax[i].imshow(imgs2D[i], cmap='gray')
-        ax[i+n].set_title(f"{k}x{k} Decomposed")
-        ax[i+n].imshow(imgs1D[i], cmap='gray')
+    for i in range(0, 2*n, 2):
+        k = sizes[i//2]
+        ax[i].imshow(imgs2D[i//2], cmap='gray', aspect='auto')
+        ax[i].get_xaxis().set_label_text(f"2D Filter ({k}x{k})")
+
+        ax[i+1].imshow(imgs1D[i//2], cmap='gray', aspect='auto')
+        ax[i+1].get_xaxis().set_label_text(f"1D Separated ({k}x{k})")
+    plt.subplots_adjust(wspace=.05, hspace=.5)
     plt.show()
 
 
@@ -45,7 +53,7 @@ def display_time_plot(time_1d, time_2d, sizes):
         xaxis_title="Filter Size (WxW)"
     )
     #fig.write_html('%s/%s_interactive.html' % (plot_dir, fname))
-    #fig.show()
+    fig.show()
 
 
 def run():
@@ -59,7 +67,7 @@ def run():
 
     Fs_2D = [F]
     Fs_1D = [(F1, F2)]
-    sizes = [3, 5, 7, 11]
+    sizes = [3, 5, 7, 9, 11, 13, 15]
     for _ in sizes[1:]:
         # 2D filter extension
         Fp = Fs_2D[-1]
@@ -72,7 +80,7 @@ def run():
         Fp_2 = np.insert(Fp_[1], (1, 2), values=0, axis=1)
         Fs_1D.append((Fp_1, Fp_2))
 
-    img_path = 'samples/2d_decomp2.jpg'
+    img_path = 'samples/2d_decomp.jpg'
     img = imread(img_path, as_gray=True)
     plt.imshow(img, cmap='gray')
     plt.title('Original Image')
@@ -84,8 +92,10 @@ def run():
     # For 1D filters
     for i in range(len(sizes)):
         start = time.time()
-        img_i = transformer.apply_filter(img, Fs_1D[i][0])
-        img_f = transformer.apply_filter(img_i, Fs_1D[i][1])
+        img_i = transformer.apply_filter(
+            img, Fs_1D[i][0], clip=False, padding='valid')
+        img_f = transformer.apply_filter(
+            img_i, Fs_1D[i][1], clip=True, padding='valid')
         end = time.time()
         time_1d.append(end-start)
         imgs_1d.append(img_f)
@@ -93,14 +103,16 @@ def run():
     # For 2D filters
     for i in range(len(sizes)):
         start = time.time()
-        img_f = transformer.apply_filter(img, Fs_2D[i])
+        img_f = transformer.apply_filter(
+            img, Fs_2D[i], clip=True, padding='valid')
         end = time.time()
         time_2d.append(end-start)
         imgs_2d.append(img_f)
 
-    display_decomp_res(imgs_1d, imgs_2d, sizes)
+    n2d = 4
+    display_decomp_res(imgs_1d[:n2d], imgs_2d[:n2d], sizes[:n2d])
     display_time_plot(time_1d, time_2d, sizes)
 
 
-run()
+#run()
 # %%
