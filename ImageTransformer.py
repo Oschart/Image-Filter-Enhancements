@@ -37,18 +37,19 @@ class ImageTransformer():
         if padding == 'same':
             padv, padh = nk//2, mk//2
             nn, mm = n, m
+            Xp = cv2.copyMakeBorder(X, padv, padv, padh,
+                                    padh, borderType=cv2.BORDER_REFLECT)
         else:
-            padv, padh = 0, 0
             nn, mm = n-nk+1, m-mk+1
-        Xp = cv2.copyMakeBorder(X, padv, padv, padh,
-                                padh, borderType=cv2.BORDER_REFLECT)
+            Xp = X
+
         Y = np.zeros(shape=X.shape)
         for i in range(nn):
             for j in range(mm):
                 M = Xp[i:i+nk, j:j+mk]
                 Y[i, j] = (M*F).sum()
-        
+
         if clip:
-            Y = Y/np.max(Y)
+            #Y = Y/np.max(Y)
             Y = np.clip(Y, 0.0, 1.0)
         return Y
