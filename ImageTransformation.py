@@ -54,7 +54,7 @@ class ImageTransformation:
         
         for i in range(X.shape[0]):
             for j in range(X.shape[1]):
-                Y[i,j] = he_map[X[i,j]]
+                Y[i,j] = he_map[int(X[i,j])]
         return Y/255.0
 
 
