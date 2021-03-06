@@ -1,23 +1,24 @@
 # %%
-import numpy as np
 import time
-from skimage.io import imread, imshow, show
+
 import matplotlib.pyplot as plt
+import numpy as np
 import plotly.graph_objects as go
 import plotly.offline as pyo
+from skimage.io import imread, imshow, show
 
-from parse_utils import trans_format, parse_trans, display_single_filter
 from ImageTransformation import ImageTransformation
 from ImageTransformer import ImageTransformer
+from parse_utils import display_single_filter, parse_trans, trans_format
 
 
 def display_decomp_res(imgs1D, imgs2D, sizes):
     n = len(sizes)
     fig, axes = plt.subplots(
         n, 2, sharex=True, sharey=True, figsize=(6, 6), dpi=100)
-    
+
     fig.suptitle("2D Filters vs 1D Decomposition")
-    
+
     for ax in axes.flat:
         ax.set(xticks=[], yticks=[])
 
@@ -54,9 +55,8 @@ def display_time_plot(time_1d, time_2d, sizes):
         xaxis_title="Filter Size (WxW)"
     )
     #fig.write_html('%s/%s_interactive.html' % (plot_dir, fname))
-    #fig.show()
-    pyo.iplot(fig, filename = 'basic-line')
-
+    # fig.show()
+    pyo.iplot(fig, filename='basic-line')
 
 
 def run():
@@ -82,7 +82,6 @@ def run():
         Fp_1 = np.insert(Fp_[0], (1, Fp_[0].shape[0]-1), values=0, axis=0)
         Fp_2 = np.insert(Fp_[1], (1, 2), values=0, axis=1)
         Fs_1D.append((Fp_1, Fp_2))
-
 
     img_path = 'samples/2d_decomp.jpg'
     img = imread(img_path, as_gray=True)
@@ -113,12 +112,13 @@ def run():
         time_2d.append(end-start)
         imgs_2d.append(img_f)
 
-    display_single_filter(imgs_1d[0],imgs_2d[0], orig_name="2D Filter (3x3)", effect_name="1D Separated")
+    display_single_filter(
+        imgs_1d[0], imgs_2d[0], orig_name="2D Filter (3x3)", effect_name="1D Separated")
 
     n2d = 4
     display_decomp_res(imgs_1d[:n2d], imgs_2d[:n2d], sizes[:n2d])
     display_time_plot(time_1d, time_2d, sizes)
 
 
-#run()
+# run()
 # %%

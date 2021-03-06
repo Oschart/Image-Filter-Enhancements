@@ -1,14 +1,15 @@
 # %%
-import numpy as np
 import time
-from skimage.io import imread, imshow, show
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import ImageGrid
-import plotly.graph_objects as go
 
-from parse_utils import trans_format, parse_trans, display_single_filter
+import matplotlib.pyplot as plt
+import numpy as np
+import plotly.graph_objects as go
+from mpl_toolkits.axes_grid1 import ImageGrid
+from skimage.io import imread, imshow, show
+
 from ImageTransformation import ImageTransformation
 from ImageTransformer import ImageTransformer
+from parse_utils import display_single_filter, parse_trans, trans_format
 
 F_id = np.array([
     [0, 0, 0],

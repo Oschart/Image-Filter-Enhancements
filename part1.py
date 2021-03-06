@@ -1,16 +1,15 @@
-#%% 
+# %%
+import matplotlib.pyplot as plt
 import numpy as np
 #import cv2
 from skimage.io import imread, imshow
-from parse_utils import trans_format, parse_trans, display_single_filter
-from parse_utils import parse_trans
+
 from ImageTransformation import ImageTransformation
 from ImageTransformer import ImageTransformer
-import matplotlib.pyplot as plt
+from parse_utils import display_single_filter, parse_trans, trans_format
 
 
-
-def run(interactive=True, img_path='samples/rome.jpg', trans_str='', effect='', aspect='equal',side_by_side=True):
+def run(interactive=True, img_path='samples/rome.jpg', trans_str='', effect='', aspect='equal', side_by_side=True):
     if interactive:
         img_path = input("Insert image path")
         trans_str = input(trans_format)
@@ -22,7 +21,6 @@ def run(interactive=True, img_path='samples/rome.jpg', trans_str='', effect='', 
     for ptr in ptrans:
         trans = ImageTransformation(key=ptr[0], args=ptr[1])
         trans_list.append(trans)
-
 
     transformer = ImageTransformer(tr_list=trans_list)
 
@@ -36,4 +34,3 @@ def run(interactive=True, img_path='samples/rome.jpg', trans_str='', effect='', 
         plt.imshow(output, cmap='gray')
         plt.title(effect)
         plt.show()
-

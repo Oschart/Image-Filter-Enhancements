@@ -1,7 +1,7 @@
-#%%
+# %%
 import re
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
 
 trans_format = '''
 Please insert a list of your transformations in the following format:
@@ -14,6 +14,7 @@ Available transormations:
 <NTHP n>
 <HE>
 '''
+
 
 def parse_trans(trans_str):
     ptrans = re.findall(r'\<(.*?)\>', trans_str)
@@ -33,7 +34,7 @@ def display_single_filter(img_orig, img_filt, orig_name="Original", effect_name=
         w = 8
     fig, axes = plt.subplots(
         1, n, sharex=True, sharey=True, figsize=(8, w), dpi=100)
-    #fig.suptitle(filter_name)
+    # fig.suptitle(filter_name)
     axes[0].set_title(orig_name,
                       fontdict=None, loc='center', color="k")
     axes[0].imshow(img_orig, cmap='gray', aspect=aspect)
