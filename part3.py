@@ -4,9 +4,9 @@ import time
 from skimage.io import imread, imshow, show
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import plotly.offline as pyo
 
-from parse_utils import trans_format
-from parse_utils import parse_trans
+from parse_utils import trans_format, parse_trans, display_single_filter
 from ImageTransformation import ImageTransformation
 from ImageTransformer import ImageTransformer
 
@@ -34,6 +34,7 @@ def display_decomp_res(imgs1D, imgs2D, sizes):
 
 
 def display_time_plot(time_1d, time_2d, sizes):
+    pyo.init_notebook_mode()
     fig = go.Figure(data=go.Scatter(
         x=sizes,
         y=time_1d,
@@ -53,7 +54,9 @@ def display_time_plot(time_1d, time_2d, sizes):
         xaxis_title="Filter Size (WxW)"
     )
     #fig.write_html('%s/%s_interactive.html' % (plot_dir, fname))
-    fig.show()
+    #fig.show()
+    pyo.iplot(fig, filename = 'basic-line')
+
 
 
 def run():
@@ -67,18 +70,19 @@ def run():
 
     Fs_2D = [F]
     Fs_1D = [(F1, F2)]
-    sizes = [3, 5, 7, 9, 11, 13, 15]
+    sizes = list(range(3, 16, 2))
     for _ in sizes[1:]:
         # 2D filter extension
         Fp = Fs_2D[-1]
-        Fp = np.insert(Fp, (1, Fp.shape[0]-3), values=0, axis=0)
+        Fp = np.insert(Fp, (1, Fp.shape[0]-1), values=0, axis=0)
         Fp = np.insert(Fp, (1, 2), values=0, axis=1)
         Fs_2D.append(Fp)
         # 1D filter extension
         Fp_ = Fs_1D[-1]
-        Fp_1 = np.insert(Fp_[0], (1, Fp.shape[0]-3), values=0, axis=0)
+        Fp_1 = np.insert(Fp_[0], (1, Fp_[0].shape[0]-1), values=0, axis=0)
         Fp_2 = np.insert(Fp_[1], (1, 2), values=0, axis=1)
         Fs_1D.append((Fp_1, Fp_2))
+
 
     img_path = 'samples/2d_decomp.jpg'
     img = imread(img_path, as_gray=True)
@@ -108,6 +112,8 @@ def run():
         end = time.time()
         time_2d.append(end-start)
         imgs_2d.append(img_f)
+
+    display_single_filter(imgs_1d[0],imgs_2d[0], orig_name="2D Filter (3x3)", effect_name="1D Separated")
 
     n2d = 4
     display_decomp_res(imgs_1d[:n2d], imgs_2d[:n2d], sizes[:n2d])
