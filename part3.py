@@ -58,6 +58,15 @@ def display_time_plot(time_1d, time_2d, sizes):
     # fig.show()
     pyo.iplot(fig, filename='basic-line')
 
+def display_time_matplot(time_1d, time_2d, sizes):
+    plt.plot(sizes, time_1d, label="1D Separated Filters", marker='o', markerfacecolor='blue')
+    plt.plot(sizes, time_2d, label="2D Whole Filter", marker='o', markerfacecolor='red')
+    plt.xlabel("Filter Size (WxW)")
+    plt.ylabel("Execution Time (s)")
+    plt.legend()
+    plt.grid(linestyle=':', linewidth=0.4)
+    plt.show()
+
 
 def run():
     F = np.array([
@@ -70,7 +79,7 @@ def run():
 
     Fs_2D = [F]
     Fs_1D = [(F1, F2)]
-    sizes = list(range(3, 16, 2))
+    sizes = list(range(3, 20, 2))
     for _ in sizes[1:]:
         # 2D filter extension
         Fp = Fs_2D[-1]
@@ -117,7 +126,7 @@ def run():
 
     n2d = 4
     display_decomp_res(imgs_1d[:n2d], imgs_2d[:n2d], sizes[:n2d])
-    display_time_plot(time_1d, time_2d, sizes)
+    display_time_matplot(time_1d, time_2d, sizes)
 
 
 # run()
