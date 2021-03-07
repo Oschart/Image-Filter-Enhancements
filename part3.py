@@ -79,7 +79,7 @@ def run():
 
     Fs_2D = [F]
     Fs_1D = [(F1, F2)]
-    sizes = list(range(3, 20, 2))
+    sizes = list(range(3, 70, 2))
     for _ in sizes[1:]:
         # 2D filter extension
         Fp = Fs_2D[-1]
